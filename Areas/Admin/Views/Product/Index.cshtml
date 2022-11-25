@@ -1,0 +1,919 @@
+﻿<div class="row">
+    <div class="col-lg-12">
+        <p><a class="text-dark" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Dashboard</a> / Product list</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-header">
+                <button type="button" class="btn btn-primary btn-rounded btn-fw btn-sm" data-bs-toggle="modal" data-bs-target="#myModal">Add new</button>
+                <button type="button" class="btn btn-primary btn-danger btn-fw btn-sm">Delete</button>
+
+                <button id="showSearch" class="btn btn-warning btn-sm " style="float: right;" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <span id="iconSearch" class="icon-search"><span />
+                </button>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">Product list</h4>
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body">
+                        <div class="row">
+                            <div class="form-group col-lg-6">
+                                <label for="exampleInputUsername1">Code</label>
+                                <input type="text" class="form-control form-control-sm" id="SearchCode" placeholder="Code" />
+                            </div>
+                            <div class="form-group col-lg-6">
+                                <label for="exampleInputUsername1">roduct Name</label>
+                                <input type="text" class="form-control form-control-sm" id="SearchName" placeholder="Product Name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Product Name</th>
+                                <th>Category</th>
+                                <th>Pure Gold (%)</th>
+                                <th>Stone Weight (g)</th>
+                                <th>Gold Weight (g)</th>
+                                <th>Quantity</th>
+                                <th>Total ($)</th>
+                                <th>Operation</th>
+                            </tr>
+                        </thead>
+                        <tbody id="list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal " id="myModal">
+        <div class="modal-dialog modal-lg" style="max-width: 60%;">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Product</h4>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm" data-bs-dismiss="modal"><span class="mdi mdi-close"></span></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="forms-sample row">
+                        <div class="col-xl-9">
+                            <div class="row">
+                                @*mã sản phẩm*@
+                                <div class="form-group col-xl-5">
+                                    <label for="exampleInputUsername1">Product Code</label>
+                                    <input type="text" class="form-control" id="codeProduct" placeholder="FE: GR00000002">
+                                </div>
+                                @*tên sản phẩm*@
+                                <div class="form-group col-xl-7">
+                                    <label for="exampleInputUsername1">Product Name</label>
+                                    <input type="text" class="form-control" id="nameProduct" placeholder="FE: Username">
+                                </div>
+                                @*số lượng trong kho*@
+                                <div class="form-group col-xl-7">
+                                    <label for="exampleInputUsername1">quantity</label>
+                                    <input type="number" class="form-control" id="quantity" placeholder="FE: 2">
+                                </div>
+                                @*cặp sản phảm*@
+                                <div class="form-group col-xl-5">
+                                    <label for="exampleInputUsername1">Pairs</label>
+                                    <select class="form-select form-control" id="pairs" aria-label="Example select with button addon">
+                                        <option selected>Select Pairs...</option>
+                                        <option value="1">pcs</option>
+                                        <option value="2">set</option>
+                                        <option value="2">pair</option>
+                                    </select>
+                                </div>
+                                @*chất lượng sản phẩm*@
+                                <div class="form-group col-xl-5">
+                                    <label for="exampleInputUsername1">Product Quality</label>
+                                    <select class="form-select form-control" id="productQuality" aria-label="Example select with button addon">
+                                        <option selected>Select Product Quality...</option>
+                                        <option value="1">Good quality</option>
+                                        <option value="2">Medium quality</option>
+                                        <option value="3">Least</option>
+                                    </select>
+
+                                </div>
+                                @*ảnh sản phẩm*@
+                                <div class="form-group col-xl-7">
+                                    <label for="exampleInputUsername1">Upload</label>
+                                    <input type="file" name="fileImage" id="fileImage" class="file-upload-default">
+                                    <div class="input-group col-xs-12">
+                                        <input type="text" class="form-control file-upload-info" id="images" disabled="" placeholder="Upload Image">
+                                        <span class="input-group-append">
+                                            <button class="file-upload-browse btn btn-primary btn-icon" style="height: auto;" type="button"><i class="mdi mdi-cloud-upload"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                                @*danh mục*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Category</label>
+                                    <div class="input-group" id="listCategory"></div>
+                                </div>
+                                @*nhãn hiệu*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Brand</label>
+                                    <div class="input-group" id="listBrand"></div>
+                                </div>
+                                @*chứng nhận*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Certify</label>
+                                    <div class="input-group" id="listCertify"></div>
+                                </div>
+                                @*loại vàng*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Gold Type</label>
+                                    <div class="input-group" id="listGoldk"></div>
+                                </div>
+                                @*trọng lượng vàng*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Gold Weight</label>
+                                    <input type="number" step=0.001 class="form-control" min="0" id="goldWeight" placeholder="FE: 2.00">
+                                </div>
+                                @*trọng lượng đá*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Stone Weight</label>
+                                    <input type="number" step=0.001 class="form-control" min="0" id="stoneWeight" placeholder="FE: 2.00">
+                                </div>
+                                @*tổng trọng lương*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Total Gross Weight</label>
+                                    <input type="number" step=0.001 class="form-control" min="0" id="totalWeight" placeholder="FE: 4.00" readonly>
+                                </div>
+                                @*số lượng vàng*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Gold Number</label>
+                                    <input type="number" step=1 class="form-control" min="0" id="goldNumber" placeholder="FE: 2">
+                                </div>
+                                @*vàng nguyên chất*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Pure Gold</label>
+                                    <input type="number" step=10 class="form-control" min="10" id="pureGold" placeholder="FE: 60(%)">
+                                </div>
+                                @*tỷ giá vàng*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Gold Value</label>
+                                    <input type="number" step=1.00 class="form-control" min="0" id="goldValue" placeholder="FE: 17.00$" readonly>
+                                </div>
+                                @*Phí làm Vàng*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Gold making fee</label>
+                                    <input type="number" step=0.001 class="form-control" min="0" id="goldMaking" placeholder="FE: 20.00$">
+                                </div>
+                                @*Phí làm Đá*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Stone making fee</label>
+                                    <input type="number" step=0.001 class="form-control" min="0" id="stoneMaking" placeholder="FE:20.00$">
+                                </div>
+                                @*Phí khác*@
+                                <div class="form-group col-xl-4">
+                                    <label for="exampleInputUsername1">Other fees</label>
+                                    <input type="number" step=0.001 class="form-control" min="0" id="OtherFees" placeholder="FE:20.00$">
+                                </div>
+                                @*tổng phí làm sp*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Total implementation fee</label>
+                                    <input type="text" class="form-control" id="totalFee" placeholder="FE:60.00$" readonly>
+                                </div>
+                                @*giá sp*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Product price</label>
+                                    <input type="text" class="form-control" id="price" placeholder="FE:80.00$" readonly>
+                                </div>
+                                @*Sale*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Sale</label>
+                                    <input type="number" step=10 class="form-control" min="0" max="70" id="sale" placeholder="FE:10%">
+                                </div>
+                                @*Sale Price*@
+                                <div class="form-group col-xl-6">
+                                    <label for="exampleInputUsername1">Price Sale</label>
+                                    <input type="number" step=10 class="form-control" min="0" max="70" id="priceSale" readonly>
+                                </div>
+                                <div class="form-group col-xl-12">
+                                    <label for="exampleFormControlTextarea1" class="form-label">Describe</label>
+                                    <textarea class="form-control" id="describe" rows="3"></textarea>
+                                </div>
+                                <div class="col-xl-12">
+                                    <button type="button" id="add-new-product" class="btn btn-primary mr-2 add-new-product btn-sm ">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3">
+                            <div class="container mt-3">
+                                <h6 for="exampleInputUsername1">Image Product</h6>
+                                <img id="imgPreview" src="~/images/jpg-63.png" style="background: #bfbfbf4d;" class="rounded" alt="Cinque Terre" width="100%">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @*add Category*@
+    <div class="modal" id="myModalCategory">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Category</h4>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm" data-bs-dismiss="modal"><span class="mdi mdi-close"></span></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="forms-sample">
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Category Name</label>
+                            <input type="text" class="form-control" id="CategoryName" placeholder="Username">
+                        </div>
+
+                        <div class="form-group row no-gutters">
+                            <label class="col-sm-12">Status</label>
+                            <div class="col-sm-4">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" name="membershipRadios" id="StatusCategory" value="true" checked>
+                                        Activity
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-new" class="btn btn-primary mr-2 add-new-category btn-sm">Submit</button>
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @*add new gold*@
+    <div class="modal" id="myModalGold">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Gold</h4>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm" data-bs-dismiss="modal"><span class="mdi mdi-close"></span></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="forms-sample">
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Kind of Gold</label>
+                            <input type="text" class="form-control" id="GoldCrt" placeholder="Kind of Gold">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Gold Price</label>
+                            <input type="number" step=0.01 class="form-control" id="GoldRate" placeholder="Kind of Gold">
+                        </div>
+                        <button type="button" id="add-new" class="btn btn-primary mr-2 add-new-gold btn-sm">Submit</button>
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @*add new Brand*@
+    <div class="modal" id="myModalBrand">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Brand</h4>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm" data-bs-dismiss="modal">
+                        <span class="mdi mdi-close"></span>
+                    </button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="forms-sample">
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Brand Name</label>
+                            <input type="text" class="form-control" id="BrandName" placeholder="Username">
+                        </div>
+
+                        <div class="form-group row no-gutters">
+                            <label class="col-sm-12">Status</label>
+                            <div class="col-sm-4">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        <input type="checkbox" class="form-check-input" name="membershipRadios"
+                                               id="StatusBrand" value="true" checked>
+                                        Activity
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-new" class="btn btn-primary mr-2 add-new-brand btn-sm">Submit</button>
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    @*add Certify*@
+    <div class="modal" id="myModalCertify">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Add New Certify</h4>
+                    <button type="button" class="btn btn-danger btn-rounded btn-sm" data-bs-dismiss="modal"><span class="mdi mdi-close"></span></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <form class="forms-sample" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="exampleInputUsername1">Certify Type</label>
+                            <input type="text" class="form-control" id="certifyType" placeholder="Username">
+                        </div>
+
+                        <div class="form-group row no-gutters">
+                            <label for="exampleInputUsername1">Upload</label>
+                            <input type="file" name="fileImage" id="fileUpload" class="file-upload-default">
+                            <div class="input-group col-xs-12">
+                                <input type="text" class="form-control file-upload-info" id="fileUploads" disabled="" placeholder="Upload Image">
+                                <span class="input-group-append">
+                                    <button class="file-upload-browse btn btn-primary btn-icon" style="height: auto;" type="button"><i class="mdi mdi-cloud-upload"></i></button>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="button" id="add-new" class="btn btn-primary mr-2 add-new-certify btn-sm">Submit</button>
+                    </form>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    @*adđ new Brand*@
+    <script>
+        $(document).ready(function () {
+
+            $('.add-new-brand').click(function () {
+                var _name = $('input#BrandName').val();
+                var _status = $('input#StatusBrand').change().val();
+                var _model = {
+                    idBrand: "",
+                    brandName: _name,
+                    Status: _status
+                };
+
+                console.log(_model);
+
+                $.ajax({
+                    url: '/admin/Brand/Create',
+                    type: 'POST',
+                    data: _model,
+                    success: function (res) {
+                        console.log(res);
+                        $('#myModalBrand').modal('hide');
+                        $('input#BrandName').val('');
+                        $('input#StatusBrand').val(true);
+                        listBrand();
+                    },
+                    error: function (req) {
+                        console.log(res);
+                    }
+                });
+            });
+        });
+    </script>
+
+    @*//New Add Category*@
+    <script>
+        $(document).ready(function () {
+
+            $('.add-new-category').click(function () {
+                var _name = $('input#CategoryName').val();
+                var _status = $('input#StatusCategory').change().val();
+                var _model = {
+                    CategoryId: "",
+                    CategoryName: _name,
+                    Status: _status
+                };
+
+                $.ajax({
+                    url: '/admin/Category/Create',
+                    type: 'POST',
+                    data: _model,
+                    success: function (res) {
+                        $('#myModalCategory').modal('hide');
+                        $('input#CategoryName').val('');
+                        $('input#StatusCategory').val(true);
+                        listCategory();
+                    },
+                    error: function (req, status, error) {
+                        console.log(status);
+                    }
+                });
+            });
+        });
+    </script>
+
+    @*//New Add Gold*@
+    <script>
+        $(document).ready(function () {
+
+            $('.add-new-gold').click(function () {
+                var _GoldCrt = $('input#GoldCrt').val();
+                var _GoldRate = $('input#GoldRate').val();
+                var _model = {
+                    gold_Crt: _GoldCrt,
+                    GoldRate: _GoldRate
+                };
+
+                console.log(_model);
+
+                $.ajax({
+                    url: '/admin/Goldk/Create',
+                    type: 'POST',
+                    data: _model,
+                    success: function (res) {
+
+                        $('#myModalGold').modal('hide');
+                        $('input#GoldCrt').val('');
+                        $('input#GoldRate').val('');
+                        listGoldk();
+                    },
+                    error: function (res) {
+                        console.log(res);
+                    }
+                });
+            });
+        });
+    </script>
+
+    @*New Add Certify*@
+    <script>
+        $(document).ready(function () {
+            $('.add-new-certify').click(function () {
+                var fileUpload = $('#fileUpload').get(0);
+                var files = fileUpload.files;
+                var formData = new FormData();
+                formData.append('files', files[0]);
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/Dashboard/Upload',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (urlImage) {
+                        var _name = $('input#certifyType').val();
+                        var _model = {
+                            certifyType: _name,
+                            imageCertify: urlImage.data,
+                        };
+
+                        $.ajax({
+                            url: '/admin/Certify/Create',
+                            type: 'POST',
+                            data: _model,
+                            success: function (res) {
+                                $('#myModalCertify').modal('hide');
+                                $('input#certifyType').val('');
+                                $('input#fileUpload').val('');
+                                $('input#fileUploads').val('');
+                                listCertify();
+                            },
+                            error: function (req, status, error) {
+                                console.log(status);
+                            }
+                        });
+                    }, error: function (err) {
+                        alert(err.statusText)
+                    }
+                });
+            });
+        });
+    </script>
+
+    @*Upload File*@
+    <script>
+        $(document).ready(() => {
+            $("#fileImage").change(function () {
+                const file = this.files[0];
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function (event) {
+                        $("#imgPreview").attr("src", event.target.result);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+
+    @*listCategory*@
+    <script>
+        function listCategory() {
+            var page = 1;
+            $.ajax({
+                url: '/admin/Category/GetAllList',
+                type: 'GET',
+                success: function (res) {
+                    //console.log(res);
+                    var html = '';
+                    html += '<select class="form-select form-control" id="category" aria-label="Example select with button addon">';
+                    if (res.data.length > 0) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            var data = res.data[i];
+                            html += '<option value="' + data.categoryId + '">' + data.categoryName + '</option>';
+                        };
+                    } else {
+                        html += '<option selected>No Record Exists...</option>';
+                    };
+                    html += '</select>';
+                    html += '<button type="button" id="buttonCategory" style="border: none; padding: 10px; color: blue; background: none;" class=" btn btn-outline-secondary btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#myModalCategory"><i class="mdi mdi-plus-circle-outline"></i></button>';
+                    $('#listCategory').html(html);
+                }
+            });
+        };
+
+        listCategory();
+    </script>
+
+    @*listBrand*@
+    <script>
+        function listBrand() {
+            var page = 1;
+            $.ajax({
+                url: '/admin/Brand/GetAllList',
+                type: 'GET',
+                success: function (res) {
+                    //console.log(res);
+                    var html = '';
+                    html += '<select class="form-select form-control" id="brand" aria-label="Example select with button addon">';
+                    if (res.data.length > 0) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            var data = res.data[i];
+                            html += '<option value="' + data.idBrand + '">' + data.brandName + '</option>';
+                        };
+                    } else {
+                        html += '<option selected>No Record Exists...</option>';
+                    };
+                    html += '</select>';
+                    html += '<button type="button" id="buttonBrand"  style="border: none; padding: 10px; color: blue; background: none;" data-bs-toggle="modal" data-bs-target="#myModalBrand" class="btn btn-outline-secondary btn-rounded btn-icon"><i class="mdi mdi-plus-circle-outline"></i></button>';
+                    $('#listBrand').html(html);
+                }
+            });
+        };
+
+        listBrand();
+    </script>
+
+    @*listGold*@
+    <script>
+        function listGoldk() {
+            var page = 1;
+            $.ajax({
+                url: '/admin/Goldk/GetAllList',
+                type: 'GET',
+                success: function (res) {
+                    //console.log(res);
+                    var html = '';
+                    html += '<select class="form-select form-control" id="goldId" aria-label="Example select with button addon">';
+                    if (res.data.length > 0) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            var data = res.data[i];
+                            html += '<option value="' + data.goldTypeId + '">' + data.gold_Crt + '(' + data.goldRate + '$)</option>';
+                        };
+                    } else {
+                        html += '<option selected>No Record Exists...</option>';
+                    };
+                    html += '</select>';
+                    html += '<button type="button" id="buttonGoldk"  style="border: none; padding: 10px; color: blue; background: none;" class="btn btn-outline-secondary btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#myModalGold"><i class="mdi mdi-plus-circle-outline"></i></button>';
+                    $('#listGoldk').html(html);
+                }
+            });
+        };
+
+        listGoldk();
+    </script>
+
+    @*listCertify*@
+    <script>
+        function listCertify() {
+            var page = 1;
+            $.ajax({
+                url: '/admin/Certify/GetAllList',
+                type: 'GET',
+                success: function (res) {
+                    //console.log(res);
+                    var html = '';
+                    html += '<select class="form-select form-control" id="certifiId" aria-label="Example select with button addon">';
+                    if (res.data.length > 0) {
+                        for (let i = 0; i < res.data.length; i++) {
+                            var data = res.data[i];
+                            html += '<option value="' + data.idCertify + '">' + data.certifyType + '</option>';
+                        };
+                    } else {
+                        html += '<option selected>No Record Exists...</option>';
+                    };
+                    html += '</select>';
+                    html += '<button type="button" id="buttonGoldk"  style="border: none; padding: 10px; color: blue; background: none;" class="btn btn-outline-secondary btn-rounded btn-icon" data-bs-toggle="modal" data-bs-target="#myModalCertify"><i class="mdi mdi-plus-circle-outline"></i></button>';
+                    $('#listCertify').html(html);
+                }
+            });
+        };
+
+        listCertify();
+    </script>
+
+    @*List Product*@
+    <script>
+        function listProduct() {
+            var page = 1;
+            $.ajax({
+                url: '/admin/Product/getList',
+                type: 'GET',
+                success: function (res) {
+                    console.log(res);
+                    ShowHtml(res);
+                }
+            });
+        };
+
+        listProduct();
+    </script>
+
+    <script>
+        function ShowHtml(res) {
+            var html = '';
+            if (res.data.length > 0) {
+                for (let i = 0; i < res.data.length; i++) {
+                    var data = res.data[i];
+                    html += '<tr>';
+                    html += '<td>' + data.styleCode + '</td>';
+                    html += '<td style="font-weight: 800;"><img src="/public/images/' + data.imageProduct + '"/> ' + data.productName + '</td>';
+                    html += '<td>' + data.category.categoryName + '</td>';
+                    html += '<td>' + data.net_Gold + '%</td>';
+                    html += '<td>' + data.stone_WT + '(g)</td>';
+                    html += '<td>' + data.gold_WT + '(g)</td>';
+                    html += '<td>' + data.quantity + '</td>';
+                    html += '<td>$' + data.mrp + '</td>';
+                    html += '<td>';
+                    html += '<button type="button" data-id="' + data.productId + '" class="btn btn-success btn-rounded btn-sm edit"><span class="mdi mdi-tooltip-edit"></span></button>';
+                    html += '<button type="button" data-id="' + data.productId + '"  class="btn btn-danger btn-rounded btn-sm delete"><span class="mdi mdi-delete-forever"></span></button>';
+                    html += '</td>';
+                    html += '</tr>';
+                };
+                if (res.size > 1) {
+                    html += '<tr>';
+                    html += '<td colspan="4" style="padding: 10px 0px;"><ul class="pagination" style="margin:0px 0px">';
+                    res.pageCurrent > 1 ? html += '<li class="page-item page"><a class="page-link" data-id="' + (res.pageCurrent - 1) + '"><i class="mdi mdi-chevron-left"></i></a></li>' : '';
+                    for (let i = 0; i < res.size; i++) {
+                        html += '<li class="page-item ' + ((i + 1) == res.pageCurrent ? 'active' : '') + '"><a class="page-link" data-id="' + (i + 1) + '">' + (i + 1) + '</a></li>';
+                    }
+                    res.pageCurrent < res.size ? html += '<li class="page-item page"><a class="page-link" data-id="' + (res.pageCurrent + 1) + '"><i class="mdi mdi-chevron-right"></i></a></li>' : '';
+                    html += '</ul></td >';
+                    html += '</tr>';
+                }
+            } else {
+                html += '<tr>';
+                html += '<td colspan="9"><div style="text-align: center;"><h3 class="card-title text-primary">No records found</h3></div></td>';
+                html += '</tr>';
+            };
+            $('#list').html(html);
+        }
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('input#stoneWeight').change(function () {
+                var _goldWeight = $('input#goldWeight').val();
+                var _stoneWeight = $(this).val();
+                $('input#totalWeight').val(Number(_goldWeight) + Number(_stoneWeight));
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('input#goldNumber').change(function () {
+                var _goldNumber = $(this).val();
+
+                var _goldType = $('select#goldId').val();
+
+                $.ajax({
+                    url: '/admin/Goldk/GetGuld?goldTypeId=' + _goldType,
+                    type: 'GET',
+
+                    success: function (res) {
+                        $('input#goldValue').val(Number(res.data.goldRate) * Number(_goldNumber));
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('input#OtherFees').change(function () {
+                var _OtherFees = $(this).val();
+                var _goldMaking = $('input#goldMaking').val();
+                var _stoneMaking = $('input#stoneMaking').val();
+                var _goldValue = $('input#goldValue').val();
+                $('input#totalFee').val(Number(_OtherFees) + Number(_goldMaking) + Number(_stoneMaking));
+                $('input#price').val(Number(_OtherFees) + Number(_goldMaking) + Number(_stoneMaking) + Number(_goldValue));
+            });
+        });
+ 
+    </script>
+
+    <script>
+        $('input#sale').change(function () {
+            var _sale = $(this).val();
+            var _OtherFees = $('input#OtherFees').val();
+            var _goldMaking = $('input#goldMaking').val();
+            var _stoneMaking = $('input#stoneMaking').val();
+            var _goldValue = $('input#goldValue').val();
+            pri = (Number(_OtherFees) + Number(_goldMaking) + Number(_stoneMaking) + Number(_goldValue)) - ((Number(_OtherFees) + Number(_goldMaking) + Number(_stoneMaking) + Number(_goldValue)) * (_sale / 100))
+            $('input#priceSale').val(pri);
+        })
+    </script>
+
+    @*//New Add*@
+    <script>
+        $(document).ready(function () {
+            $('.add-new-product').click(function () {
+                //Upload File
+                var fileUpload = $('input#fileImage').get(0);
+                var files = fileUpload.files;
+                var formData = new FormData();
+                formData.append('files', files[0]);
+                $.ajax({
+                    type: 'POST',
+                    url: '/admin/Dashboard/Upload',
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (urlImage) {
+
+                        var _codeProduct = $('input#codeProduct').val();
+                        var _nameProduct = $('input#nameProduct').val();
+                        var _quantity = $('input#quantity').val();
+                        var _pairs = $('select#pairs').val();
+                        var _productQuality = $('select#productQuality').val();
+                        var _category = $('select#category').val();
+                        var _brand = $('select#brand').val();
+                        var _certify = $('select#certifiId').val();
+                        var _goldType = $('select#goldId').val();
+                        var _stoneWeight = $('input#stoneWeight').val();
+                        var _totalWeight = $('input#totalWeight').val();
+                        var _goldNumber = $('input#goldNumber').val();
+                        var _pureGold = $('input#pureGold').val();
+                        var _goldValue = $('input#goldValue').val();
+                        var _goldMaking = $('input#goldMaking').val();
+                        var _stoneMaking = $('input#stoneMaking').val();
+                        var _OtherFees = $('input#OtherFees').val();
+                        var _totalFee = $('input#totalFee').val();
+                        var _price = $('input#price').val();
+                        var _describe = $('textarea#describe').val();
+                        var _goldWeights = $('input#goldWeight').val();
+                        var _sale = $('input#priceSale').val();
+                        var _model = {
+                            StyleCode: _codeProduct,
+                            ProductName: _nameProduct,
+                            Quantity: _quantity,
+                            pairs: _pairs,
+                            ProQuality: _productQuality,
+                            ImageProduct: urlImage.data,
+                            Category_id: _category,
+                            BrandId: _brand,
+                            CertifyId: _certify,
+                            GoldTypeId: _goldType,
+                            Stone_WT: _stoneWeight,
+                            Total_Gross_WT: _totalWeight,
+                            Gold_Amt: _goldNumber,
+                            Net_Gold: _pureGold,
+                            Gold_Rate: _goldValue,
+                            Gold_Making: _goldMaking,
+                            Stone_Making: _stoneMaking,
+                            Other_Making: _OtherFees,
+                            Total_Making: _totalFee,
+                            MRP: _price,
+                            Detail: _describe,
+                            Gold_WT: _goldWeights,
+                            Sale: _sale
+                        };
+
+                        console.log(_model);
+
+                        $.ajax({
+                            url: '/admin/Product/Create',
+                            type: 'POST',
+                            data: _model,
+                            success: function (res) {
+                                $('#myModal').modal('hide');
+                                Remove();
+                                listProduct();
+                            },
+                            error: function (req, status, error) {
+                                console.log(status);
+                            }
+                        });
+
+                    }, error: function (err) {
+                        alert(err.statusText)
+                    }
+                });
+            });
+        });
+    </script>
+
+    @*Remove Form*@
+    <script>
+        function Remove() {
+            $('input#codeProduct').val('');
+            $('input#nameProduct').val('');
+            $('input#quantity').val('');
+            $('input#pairs').val('');
+            $('input#productQuality').val('');
+            $('input#goldWeight').val('');
+            $('input#stoneWeight').val('');
+            $('input#totalWeight').val('');
+            $('input#goldNumber').val('');
+            $('input#pureGold').val('');
+            $('input#goldValue').val('');
+            $('input#goldMaking').val('');
+            $('input#stoneMaking').val('');
+            $('input#OtherFees').val('');
+            $('input#totalFee').val('');
+            $('input#price').val('');
+            $('textarea#describe').val('');
+            $('input#images').val('');
+            $('input#fileImage').val('');
+            $('input#sale').val('');
+        }
+        Remove();
+    </script>
+
+    @*//Delete*@
+    <script>
+        $(document).on('click', '.delete', function () {
+            var $_this = $(this);
+            var id = $(this).data('id');
+            $.ajax({
+                url: '/admin/Product/Delete?productId=' + id,
+                type: 'DELETE',
+                success: function (res) {
+                    listProduct();
+                },
+                error: function (res) {
+                    console.log(res);
+                }
+            });
+        })
+    </script>
+}
